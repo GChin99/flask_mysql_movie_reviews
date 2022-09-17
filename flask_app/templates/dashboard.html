@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Dashboard</title>
+</head>
+<body>
+    <!-- ------------------------Read one (step 1 of 3)------------------------------- -->
+    <!-- logged_in_user comes from the controller/route, .first_name comes from the class method constructor  -->
+    <h1 class="text-center">Welcome {{logged_in_user.first_name}} {{logged_in_user.last_name}}</h1>
+    <a href="/reviews/new" class="btn btn-info">New Movie Review</a>
+    <!------------------Logout ( 1 of 2->users.py)----------------- -->
+    <a href="/logout" class="btn btn-info">Logout</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Rating</th>
+                <th>Reivew Uploaded by</th>
+                <th>Number of Users who favorited</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for review in movie_reviews%}
+                <tr>
+                    <td>{{review.title}}</td>
+                    <td>{{review.rating}}</td>
+                    <td>{{review.user.first_name}} {{review.user.last_name}}</td>
+                    <!-- | is a filter, we are asking to return how long the list "user_ids_who_favorited" is-->
+                    <!-- using a if else statement to create a like or unlike button for the logged in user -->
+                    <td>{{review.user_id_who_favorited | length}}</td>
+                    <td>
+                        <!-- if statement so a user could favorite or unfavorite  a review just once-->
+                        {% if session.user_id in review.user_id_who_favorited %}
+                            <form action="/reviews/{{review.id}}/unfavorite" method="POST">
+                                <input name="id" type="hidden" value="{{review.id}}">
+                                <input name="user_id" type="hidden" value="{{session.user_id}}">
+                                <button type="submit">Remove Review From you favorites</button>
+                            </form>
+                        {% else %}
+                            <form action="/reviews/{{review.id}}/favorite" method="POST">
+                                <input name="id" type="hidden" value="{{review.id}}">
+                                <input name="user_id" type="hidden" value="{{session.user_id}}">
+                                <button type="submit">Favorite This Review!</button>
+                            </form>
+                        {% endif %}
+                    <!-- </td>
+                    <td> -->
+                        <button><a href="/reviews/{{review.id}}">Show</a></button>
+                        {% if session["user_id"] == review.user.id %}
+                        <button><a href="/reviews/{{review.id}}/edit">Edit</a></button>
+                        <form action="/reviews/{{review.id}}/delete" method="POST">
+                            <input name="id" value="{{review.id}}" type="hidden">
+                            <button type="submit">Delete</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

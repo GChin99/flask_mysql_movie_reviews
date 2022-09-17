@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Review</title>
+</head>
+<body>
+    <h2>Welcome {{logged_in_user.first_name}} </h2>
+        <!----------------------- Validation  (step 1 of 3)------------------------------>
+        {% with messages = get_flashed_messages() %}    <!-- declare a variable called messages -->
+        <!-- category_filter allows us to display message for specific section. -->
+            {% if messages %}                           <!-- check if there are any messages -->
+                {% for message in messages %}           <!-- loop through the messages -->
+                    <p>{{message}}</p>                  <!-- display each message in a paragraph tag -->
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <a href="/dashboard" class="btn btn-info">Home</a>
+        <a href="/logout" class="btn btn-info">Logout</a>
+    <h1>Add a New Movie Review!</h1>
+    <form action="/reviews/create" method="POST">
+        <!-- hidden input for user_id, we are going to need to know who created the review -->
+        <!-- this could also be session.user_id -->
+        <label>Title:</label>
+        <input type="text" name="title">
+        <label>Rating:</label>
+        <input type="text" name="rating">
+        <label>Date Watched:</label>
+        <input type="date" name="date_watched">
+        <label>Content:</label>
+        <textarea name="content"></textarea>
+        <input type="hidden" value="{{logged_in_user.id}}" name="user_id">
+        <button type="submit">Create a New Review!</button>
+    </form>
+</body>
+</html>
