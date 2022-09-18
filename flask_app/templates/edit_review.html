@@ -20,7 +20,7 @@
     <a href="/dashboard" class="btn btn-info">Home</a>
     <a href="/logout" class="btn btn-info">Logout</a>
     <h1>Edit {{review.title}}</h1>
-    <form action="/reviews/update" method="POST">
+    <form action="/reviews/{{review.id}}/update" method="POST">
         <label>Title:</label>
         <input type="text" name="title" value="{{review.title}}">
         <label>Rating:</label>
