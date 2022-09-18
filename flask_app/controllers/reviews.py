@@ -61,7 +61,15 @@ def show_edit_form(id):
 
 @app.route("/reviews/<int:id>/update", methods =["POST"])
 def update_review(id):
-    Review.update(request.form)
+    review_data = {
+        "id": id,
+        "title": request.form["title"],
+        "rating": request.form["rating"],
+        "date_watched": request.form["date_watched"],
+        "content": request.form["content"]
+
+    }
+    Review.update(review_data)
     return redirect("/dashboard")
 
 @app.route("/reviews/<int:id>/delete", methods =["POST"])
